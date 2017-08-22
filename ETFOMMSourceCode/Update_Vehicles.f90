@@ -1730,7 +1730,7 @@
                   HLANE = FNUMLANES(ILH)
                   DO IAUX = 1, N_AUXLANES
                     IF(AUX_LANE_ID(ILH, IAUX) .EQ. 0) EXIT !no more auxiliary lanes on this link
-                    IF(AUX_LANE_ID(ILH, IAUX) .GE. 16) THEN
+                    IF(AUX_LANE_ID(ILH, IAUX) .GE. 11 .AND. AUX_LANE_ID(ILH, IAUX) .LE. 15) THEN
                       IF(AUX_LANE_CODE(ILH, IAUX) .EQ. AUX_FULL) HLANE = AUX_LANE_ID(ILH, IAUX)
                     ENDIF
                   ENDDO
@@ -1747,7 +1747,7 @@
                   HLANE = 1
                   DO IAUX = 1, N_AUXLANES
                     IF(AUX_LANE_ID(ILH, IAUX) .EQ. 0) EXIT !no more auxiliary lanes on this link
-                    IF(AUX_LANE_ID(ILH, IAUX) .LT. 16) THEN
+                    IF(AUX_LANE_ID(ILH, IAUX) .GE. 16) THEN
                       IF(AUX_LANE_CODE(ILH, IAUX) .EQ. AUX_FULL) HLANE = AUX_LANE_ID(ILH, IAUX)
                     ENDIF
                   ENDDO

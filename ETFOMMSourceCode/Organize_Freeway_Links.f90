@@ -816,18 +816,77 @@
  
 ! --- Add an object for the warning sign for the beginning of the HOV lane.
  
-      CALL ADD_OBJECT(NOBJECTS)
-      OBJECT_LIST(NOBJECTS)%ITYPE = M_HOV_WARN
-      OBJECT_LIST(NOBJECTS)%SEGMENT = SEGMENT(IL)
-      OBJECT_LIST(NOBJECTS)%LOCATION = USN_TO_SEG_END(IL) - HOV_BEGIN(IL) + HOV_WARN(IL)
-      OBJECT_LIST(NOBJECTS)%LINK = IL
-      OBJECT_LIST(NOBJECTS)%LANE = 0
-      OBJECT_LIST(NOBJECTS)%VALUE = IL
+      CALL LOAD_HOV_WARNING_SIGN(ISEG, IL, NOBJECTS)
     ENDIF
   ENDDO
   RETURN
   END
 
+! ==================================================================================================
+  SUBROUTINE LOAD_HOV_WARNING_SIGN(ISEG, IL, NOBJECTS)
+! ----------------------------------------------------------------------
+! --- Load objects for HOV warning signs.
+! ----------------------------------------------------------------------
+  USE SEGMENTS
+  USE FREEWAY_LINKS
+  USE FREEWAY_NODES
+  USE OBJECTS
+  USE ADD_DROP_ALIGNMENTS
+  IMPLICIT NONE
+  INTEGER, INTENT(IN) :: ISEG, IL
+  INTEGER, INTENT(INOUT) :: NOBJECTS
+  INTEGER :: I1, I2, ULINK, IL2
+  INTEGER :: INODE, SIGNPOS, MAXPOS, GPOS, NMAX
+! ----------------------------------------------------------------------
+  NMAX = NUMBER_OF_LINKS_IN_SEGMENT(ISEG)
+  MAXPOS = USN_TO_SEG_END(LINKS_IN_SEGMENT(ISEG, NMAX)) 
+  SIGNPOS = MAXPOS
+  IF(SIGNPOS .GE. USN_TO_SEG_END(FTHRU_LINK(IL)) + HOV_WARN(IL)) THEN
+    SIGNPOS = USN_TO_SEG_END(FTHRU_LINK(IL)) + HOV_WARN(IL)
+  ENDIF
+  HOV_WARN(IL) = SIGNPOS
+
+! --- Check if there are any on-ramps between this off-ramp and its
+! --- associated warning sign location. If so, load a warning sign in
+! --- the geometry list.
+
+  DO I1 = 1, NMAX
+    IF(IL .EQ. LINKS_IN_SEGMENT(ISEG, I1)) THEN
+      DO I2 = I1, NUMBER_OF_LINKS_IN_SEGMENT(ISEG)
+        IL2 = LINKS_IN_SEGMENT(ISEG, I2)
+
+! --- Test if this is an on-ramp link.
+
+        IF(LINKTYPE(IL2) .GT. 0) THEN
+
+! --- Check if this on-ramp link is the last one in its roadway.
+
+          IF(LINKTYPE(FTHRU_LINK(IL2)) .EQ. 0) THEN
+
+! --- Set a warning sign at the on-ramp gore. Compute the on-ramp
+! --- gore position.
+
+            GPOS = USN_TO_SEG_END(IL2) - FLENGTH(IL2)
+            IF(HOV_WARN(IL) .GT. GPOS) THEN
+              INODE = FUSN(FTHRU_LINK(IL2))
+              CALL LOAD_OBJECT(ISEG, FTHRU_LINK(IL2), 0, 0, GPOS - 1, NOBJECTS, M_HOV_WARN)
+            ENDIF
+          ENDIF
+        ENDIF
+      ENDDO
+    ENDIF
+  ENDDO
+
+! --- Set the warning sign on the main line.
+
+  INODE = FDSN(IL)
+  SIGNPOS = HOV_WARN(IL)
+  IF(SIGNPOS .EQ. MAXPOS) SIGNPOS = SIGNPOS - 1
+  CALL LOAD_OBJECT(ISEG, MAINLINE_APPROACH(INODE), 0, 0, SIGNPOS, NOBJECTS, M_HOV_WARN)
+
+  RETURN
+  END
+  
 ! ==================================================================================================
   SUBROUTINE LOAD_TRUCK_LANES(ISEG, NOBJECTS)
 ! ----------------------------------------------------------------------
