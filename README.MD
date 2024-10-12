@@ -40,7 +40,9 @@ e) Rewrite the  Erlang distribution to generate a realistic headway, correct bug
 
 f) Fixed some maximum recall deficiencies. (see known Issues too)
 
-g) Other fixes
+g) Fixed an 8xxx node entry node bug that required an entry link to be through a movement node. The restriction is no longer there.
+
+h) Other fixes
 
 4. ETRunner
 
