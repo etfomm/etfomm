@@ -1514,8 +1514,10 @@
   IMPLICIT NONE
   CHARACTER*80, INTENT(IN) :: STRING
   INTEGER :: IBUF(29), I, IL, ILINK, SUM
+  LOGICAL :: VTHROUGHLANE  !Added by LZ
   CHARACTER AI(7)
 ! ----------------------------------------------------------------------
+  VTHROUGHLANE = .FALSE.
   READ(STRING, '(5I4,4I2,I1,7A1,8I4,I2,3I1)') IBUF(1:10), AI(1:7), IBUF(18:29)
   DO I = 1, 7
     IF(AI(I) .EQ. 'D' .OR. AI(I) .EQ. 'd') THEN
@@ -1549,7 +1551,33 @@
       CALL SENDTEXTMSG(M_ERROR)
     ENDIF
   ENDIF
- 
+ !LZ added to process 8xxx entry link 10/11/2024
+  IF(IBUF(19) .EQ. 0) THEN
+    IF (IBUF(1) .GE. 8000 .AND. IBUF(1) .LT. 9000) THEN
+        IF (IBUF(18) .NE. 0) THEN
+            IBUF(19)= IBUF(18)
+            VTHROUGHLANE=.TRUE.
+        ELSE 
+            IF (IBUF(20) .NE. 0) THEN
+                IBUF(19)=IBUF(20)
+                VTHROUGHLANE=.TRUE.
+            ELSE
+                IF (IBUF(21) .NE. 0) THEN
+                    IBUF(19)=IBUF(21)
+                    VTHROUGHLANE=.TRUE.
+                ELSE
+                     WRITE(MSGTEXT, '(A, 2I5)') ' ENTRY LINK DOES NOT HAVE RECIEVE LINK', IBUF(2), IBUF(18)
+                     CALL SENDTEXTMSG(M_ERROR)
+     
+                ENDIF   !21
+            ENDIF  !20
+            
+        ENDIF !18
+        
+    ENDIF!8000
+  ENDIF
+  
+ !End LZ
   IF(IBUF(19) .NE. 0) THEN
     CALL FIND_STREET_LINK(IBUF(2), IBUF(19), ILINK)
     STHRU_LINK(IL) = ILINK
@@ -1567,7 +1595,11 @@
       CALL SENDTEXTMSG(M_ERROR)
     ENDIF
   ENDIF
-       
+!LZ restore IBUF19
+  if (VTHROUGHLANE) then
+      IBUF(19) =0
+  endif
+  
   IF(IBUF(20) .NE. 0) THEN
     CALL FIND_STREET_LINK(IBUF(2), IBUF(20), ILINK)
     RIGHT_LINK(IL) = ILINK
