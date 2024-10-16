@@ -4,9 +4,9 @@
 		<Platform Name="Win32"/>
 	</Platforms>
 	<Configurations>
-		<Configuration Name="Debug|Win32" UseCompiler="ifortCompiler" TargetName="corsim" ConfigurationType="typeDynamicLibrary">
+		<Configuration Name="Debug|Win32" UseCompiler="ifortCompiler" ConfigurationType="typeDynamicLibrary">
 			<Tool Name="VFFortranCompilerTool" AdditionalOptions="/fpe-all:0 /libs:static " SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" PreprocessorDefinitions="TSIS_COMPATIBLE,DebugVersion" UndefineAllPreprocessorDefinitions="true" OpenMPConditionalCompilation="false" DLines="true" FPS4Logicals="true" DebugParameter="debugParameterAll" WarnDeclarations="true" WarnUnusedVariables="true" WarnUncalled="true" LocalVariableStorage="localStorageSave" StructMemberAlignment="alignSingleByte" FlushDenormalResultsToZero="true" FloatingPointSpeculation="fpSpeculationOff" CallingConvention="callConventionCVF" Traceback="true" BoundsCheck="true" UninitializedVariablesCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
-			<Tool Name="VFLinkerTool" AdditionalOptions="/Qdiag-disable:11077 /ignore:4217 /ignore:4204 /ignore:4049&#xA;" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" AdditionalLibraryDirectories="C:\MinGW\lib\gcc\mingw32\4.6.2\adalib" GenerateDebugInformation="true" SubSystem="subSystemWindows" LinkDLL="true" AdditionalDependencies="corwin.lib txdinterface.lib"/>
+			<Tool Name="VFLinkerTool" AdditionalOptions="/Qdiag-disable:11077 /ignore:4217 /ignore:4204 /ignore:4049&#xA;" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemWindows" LinkDLL="true" AdditionalDependencies="corwin.lib txdinterface.lib"/>
 			<Tool Name="VFResourceCompilerTool"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
 			<Tool Name="VFCustomBuildTool" Description=""/>
@@ -15,7 +15,7 @@
 			<Tool Name="VFPostBuildEventTool"/>
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 		</Configuration>
-		<Configuration Name="Release|Win32" UseCompiler="ifortCompiler" TargetName="corsim" ConfigurationType="typeDynamicLibrary">
+		<Configuration Name="Release|Win32" UseCompiler="ifortCompiler" ConfigurationType="typeDynamicLibrary">
 			<Tool Name="VFFortranCompilerTool" AdditionalOptions="/fpe-all:0 /libs:static " SuppressStartupBanner="true" BufferedIO="true" Preprocess="preprocessYes" PreprocessorDefinitions="TSIS_COMPATIBLE;DebugVersion" UndefineAllPreprocessorDefinitions="true" OpenMPConditionalCompilation="false" DLines="true" FPS4Logicals="true" DebugParameter="debugParameterAll" WarnDeclarations="true" WarnUnusedVariables="true" WarnUncalled="true" LocalVariableStorage="localStorageSave" StructMemberAlignment="alignSingleByte" FlushDenormalResultsToZero="true" FloatingPointSpeculation="fpSpeculationOff" CallingConvention="callConventionCVF" BoundsCheck="true" UninitializedVariablesCheck="true" RuntimeLibrary="rtMultiThreadedDLL" Interfaces="true"/>
 			<Tool Name="VFLinkerTool" AdditionalOptions="/Qdiag-disable:11077 /ignore:4217 /ignore:4204 /ignore:4049&#xA;" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateManifest="false" SubSystem="subSystemWindows" LinkDLL="true" AdditionalDependencies="corwin.lib txdinterface.lib"/>
 			<Tool Name="VFResourceCompilerTool"/>

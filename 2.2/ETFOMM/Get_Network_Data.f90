@@ -4257,8 +4257,9 @@
           ENDIF
         ENDDO
       ENDIF
+      !LZ correceyed an error +2 should not be in IBUF 10/15/2024
       DO N = 1, 5 
-        ROUNDABOUT(IRND)%EXIT_PCTS(IAP, N) = FLOAT(IBUF(N + 2)) / 100.
+        ROUNDABOUT(IRND)%EXIT_PCTS(IAP, N) = FLOAT(IBUF(N )) / 100.
       ENDDO
     ENDIF
   ENDIF

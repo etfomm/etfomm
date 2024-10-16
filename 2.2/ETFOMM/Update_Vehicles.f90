@@ -9255,7 +9255,7 @@
   USE SEEDS
   IMPLICIT NONE
   INTEGER, INTENT(IN) :: IL, IV
-  INTEGER :: IAP, IRND, I, IEXIT(5)
+  INTEGER :: IAP, IRND, I, IEXIT(5), IEX
   REAL :: RNDNUM, PCT(5)
 ! ----------------------------------------------------------------------
 #ifdef DebugVersion
@@ -9268,12 +9268,28 @@
   IAP = ROUNDABOUT_APPROACH_NUM(IL)
   IEXIT = 0
   IEXIT(1) = IAP
+!LZ corrected the bug 10/14/2024
+! 1 Exit should look all departures, noyt approaches
+! 2 PCT set zero to avoid crash
+! 3. Approaches does not neessarary have to be more than departires  
+  
   PCT(1) = ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IAP)
-  DO I = 2, ROUNDABOUT(IRND)%APPROACHES
-    IEXIT(I) = IEXIT(I - 1) + 1
-    IF(IEXIT(I) .GT. ROUNDABOUT(IRND)%APPROACHES) IEXIT(I) = 1
-    PCT(I) = PCT(I - 1) + ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IEXIT(I))
+ ! DO I = 2, 5ROUNDABOUT(IRND)%APPROACHES
+ !   IEXIT(I) = IEXIT(I - 1) + 1
+ !   IF(IEXIT(I) .GT. ROUNDABOUT(IRND)%APPROACHES) IEXIT(I) = 1
+ !   PCT(I) = PCT(I - 1) + ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IEXIT(I))
+ ! ENDDO
+  
+  DO I = 2, 5
+      PCT(I) =0
+        IEX= IEXIT(I - 1) + 1
+            IF(IEX .GT. 5 ) IEX= 1
+            PCT(I) = PCT(I - 1) + ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IEX)
+        IEXIT(I)=IEX
   ENDDO
+  
+  
+  
   FIRST_RIGHT(IV) = .FALSE.
   IF(RNDNUM .LE. PCT(1)) THEN
     ROUNDABOUT_EXIT(IV) = ROUNDABOUT(IRND)%DEPARTING_LINKS(IEXIT(1))
