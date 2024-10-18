@@ -9273,12 +9273,12 @@
 ! 2 PCT set zero to avoid crash
 ! 3. Approaches does not neessarary have to be more than departires  
   
-  PCT(1) = ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IAP)
- ! DO I = 2, 5ROUNDABOUT(IRND)%APPROACHES
- !   IEXIT(I) = IEXIT(I - 1) + 1
- !   IF(IEXIT(I) .GT. ROUNDABOUT(IRND)%APPROACHES) IEXIT(I) = 1
- !   PCT(I) = PCT(I - 1) + ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IEXIT(I))
- ! ENDDO
+   PCT(1) = ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IAP)
+!   DO I = 2, 5!ROUNDABOUT(IRND)%APPROACHES
+!     IEXIT(I) = IEXIT(I - 1) + 1
+!     IF(IEXIT(I) .GT. ROUNDABOUT(IRND)%APPROACHES) IEXIT(I) = 1
+!     PCT(I) = PCT(I - 1) + ROUNDABOUT(IRND)%EXIT_PCTS(IAP, IEXIT(I))
+!   ENDDO
   
   DO I = 2, 5
       PCT(I) =0

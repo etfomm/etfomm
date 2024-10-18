@@ -1006,8 +1006,8 @@
 ! ----------------------------------------------------------------------
   READ(STRING, '(I8,3I4,1X,I8,1X,2I2,2X,2I1,1X,3I1,2I2,5X,I1,I4,3X,I1,2I8,I1)') IBUF
   ! Harcoded by LZ for processing anamation file
-  !TYPE_OF_RUN = IBUF(1)
-  ! TYPE_OF_RUN = 4
+  TYPE_OF_RUN = IBUF(1)
+  !TYPE_OF_RUN = 4
   !  0 = SIMULATION ONLY
   ! -1 = DIAGNOSTIC ONLY
   !  1 = SIMULATION PLUS DIAGNOSTIC
@@ -4257,9 +4257,8 @@
           ENDIF
         ENDDO
       ENDIF
-      !LZ correceyed an error +2 should not be in IBUF 10/15/2024
       DO N = 1, 5 
-        ROUNDABOUT(IRND)%EXIT_PCTS(IAP, N) = FLOAT(IBUF(N )) / 100.
+        ROUNDABOUT(IRND)%EXIT_PCTS(IAP, N) = FLOAT(IBUF(N +2)) / 100.
       ENDDO
     ENDIF
   ENDIF
