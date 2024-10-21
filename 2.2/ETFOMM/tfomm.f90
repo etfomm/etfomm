@@ -1072,8 +1072,6 @@
     CALL SIMSTATUS(SIM_BEGINTIMESTEP)
 15  READ(1, *, END=25) TIME1, THELINKDATA
     IF(TIME1 .LT. ITIME) GOTO 15
-    !WRITE(MSGTEXT, '(A, F10.1)') 'PROCESSING TIMESTEP:', TIME1
-    !CALL SENDTEXTMSG(M_INFO)
     IF(TIME1 .EQ. ITIME) THEN
       IF(HAS_INCIDENTS) THEN 
         IF(TIME1 .GE. FIRST_INC_TIME .AND. TIME1 .LE. LAST_INC_TIME) THEN
@@ -1090,25 +1088,9 @@
         ENDIF
       ENDIF
       CALL SENDMSG(SIM_LINKSTATEVALID, 0)
-      !            WRITE(MSGTEXT, '(A, I10)') 'Start reading', ITIME
-            
-      !  CALL SENDTEXTMSG(M_INFO)
-      
-      
-                 if (ITIME .EQ. 0) then
- !                              WRITE(MSGTEXT, '(A, 6I10)')  ' 1 Link',   NMATCHZ, THELINKDATA%USN,  THELINKDATA%DSN,  IV,  THELINKDATA%NUMVEHICLES, THELINKDATA%MODELTYPE
- !                CALL SENDTEXTMSG(M_INFO)
-        endif
- 
 
       NV = 0
       DO !WHILE (NMATCHZ .EQ.1 ) !NV = 1, THELINKDATA%NUMVEHICLES
-        NV = NV + 1  
-        
-        IF ((ITIME.EQ.0.OR.ITIME.EQ.1.OR.ITIME.EQ.528).AND.NV.LT.10)  THEN               
-  !             WRITE(MSGTEXT, '(A, 8I10)') '2 Vehicle match Time, UAN, DSN, USN, DSN Actual, EXPECTED', ITIME, NMATCHZ, USN,DSN, THELINKDATA%USN, THELINKDATA%DSN,  NV, THELINKDATA%NUMVEHICLES
-  !             CALL SENDTEXTMSG(M_INFO)
-ENDIF
 
 21      CONTINUE 
         IF (NMATCHZ .EQ. 1) THEN
@@ -1128,29 +1110,21 @@ ENDIF
         ELSE
             NMATCHZ = 1
         ENDIF
-             
+! Time has not come yet Added by LZ 10/21/2024
+        IF( TIME2 .GT. ITIME ) THEN
+            BACKSPACE(2)
+            EXIT
+        ENDIF 
+        
+          NV = NV + 1             
         IF(TIME2 .LT. TIME1) GOTO 21
       ! Added by LZ for MNUMBER OF VEHICLES IN LINK DOES NOT MATCH NUMBER OF VEHICLE ENTRIES  
         
-IF (ITIME.EQ.0.OR. ITIME .EQ.1)  THEN               
-  !             WRITE(MSGTEXT, '(A, 8I10)') '3 Vehicle match Time, UAN, DSN, USN, DSN Actual, EXPECTED', ITIME,NMATCHZ, USN,DSN, THELINKDATA%USN, THELINKDATA%DSN,  NV, THELINKDATA%NUMVEHICLES
-  !             CALL SENDTEXTMSG(M_INFO)
-ENDIF
         IF (.NOT.(USN .EQ. THELINKDATA%USN .AND. DSN .EQ. THELINKDATA%DSN)) THEN
            NMATCHZ = 0
-  !         IF (NV-1 .NE. THELINKDATA%NUMVEHICLES) THEN
-  !              WRITE(MSGTEXT, '(A, 6I10)') '4 Vehicle Mismatch Time, UAN, DSN, Actual, EXPECTED', ITIME, NMATCHZ,THELINKDATA%USN, THELINKDATA%DSN, NV-1,  THELINKDATA%NUMVEHICLES
-  !              CALL SENDTEXTMSG(M_INFO)
-!         ENDIF
             EXIT 
-      ELSE
-                  If (ITIME .EQ.0 .OR. ITIME .EQ.1) THEN
-
-  !             WRITE(MSGTEXT, '(A, 6I10)') '5 Vehicle matched Time, UAN, DSN, Actual, EXPECTED', ITIME, NMATCHZ,USN,DSN,  NV-1,  THELINKDATA%NUMVEHICLES
-  !              CALL SENDTEXTMSG(M_INFO)
-                ENDIF
-           NMATCHZ = 1
-          
+        ELSE
+           NMATCHZ = 1       
         ENDIF
         
         NVEHLINK = NVEHLINK + 1
@@ -1159,11 +1133,6 @@ ENDIF
         THEVEHDATA%TYPEVEH = VEHICLETYPE(IV)
         THEVEHDATA%VEHICLELENGTH = LENGTH(IV)
         THEVEHDATA%DRIVERTYPE = DRIVERTYPE(IV)
-        If (ITIME .EQ.0 .OR. ITIME .EQ.1) THEN
-        
-   !                   WRITE(MSGTEXT, '(A, 4I10)') '6 Veh', USN,DSN, NV, THEVEHDATA%VEHICLEGLOBALID
-   !               CALL SENDTEXTMSG(M_INFO)
-        ENDIF
         IF(THELINKDATA%MODELTYPE .EQ. 1) THEN
           IF(THEVEHDATA%LANENUMBER .GE. 16) THEN
             THEVEHDATA%LANENUMBER = THEVEHDATA%LANENUMBER - 7
@@ -1173,56 +1142,6 @@ ENDIF
         ELSE
             
           CALL FIND_STREET_LINK(USN, DSN, IL)
-              if (IL .EQ. 0) then
-                                    WRITE(MSGTEXT, '(A, I10)') 'VID', IV
-            
-        CALL SENDTEXTMSG(M_INFO)
-                                         WRITE(MSGTEXT, '(A, I10)') 'LINK Veh', THELINKDATA%NUMVEHICLES
-            
-        CALL SENDTEXTMSG(M_INFO)
-        
-   
-                                          WRITE(MSGTEXT, '(A, I10)') 'LINK TYPE', THELINKDATA%MODELTYPE
-            
-        CALL SENDTEXTMSG(M_INFO)
-  
-                                              WRITE(MSGTEXT, '(A, I10)') 'Link USN', THELINKDATA%USN
-            
-        CALL SENDTEXTMSG(M_INFO)
-        
-                                          WRITE(MSGTEXT, '(A, I10)') 'LINK DSN', THELINKDATA%DSN
-            
-        CALL SENDTEXTMSG(M_INFO)
-                                   WRITE(MSGTEXT, '(A, I10)') 'Start reading error NV', NV
-            
-        CALL SENDTEXTMSG(M_INFO)
-        
-                                          WRITE(MSGTEXT, '(A, I10)') 'Start reading errorUSN', USN
-            
-        CALL SENDTEXTMSG(M_INFO)
-  
-                                              WRITE(MSGTEXT, '(A, I10)') 'Start reading error DWSN', DSN
-            
-        CALL SENDTEXTMSG(M_INFO)
-        
-                                          WRITE(MSGTEXT, '(A, I10)') 'Start reading error Time', ITIME
-            
-        CALL SENDTEXTMSG(M_INFO)
-                                          WRITE(MSGTEXT, '(A, F10.1)') 'Start reading error Time1', TIME1
-            
-        CALL SENDTEXTMSG(M_INFO)
-                                          WRITE(MSGTEXT, '(A, F10.1)') 'Start reading error Time2', TIME2
-            
-        CALL SENDTEXTMSG(M_INFO)
-
-                  WRITE(MSGTEXT, '(A, 5I10)') 'IL', IL, 'USN',USN,'DSN',DSN, 'TIME', ITIME,'NV',NV
-                  CALL SENDTEXTMSG(M_INFO)
-                  !STOP
-          !RETURN
-              endif
-            !WRITE(MSGTEXT, '(A, I10)') '1st', FIRST_FULL_LANE(IL)
-            
-        !CALL SENDTEXTMSG(M_INFO)
 
           IF(THEVEHDATA%LANENUMBER .GE. FIRST_FULL_LANE(IL) .AND. THEVEHDATA%LANENUMBER .LE. LAST_FULL_LANE(IL)) THEN
             THEVEHDATA%LANENUMBER = THEVEHDATA%LANENUMBER - NUMBER_RIGHTPOCKETS(IL)
@@ -1268,13 +1187,13 @@ ENDIF
       BACKSPACE(1)
     ENDIF
 25  CONTINUE
- !   WRITE(MSGTEXT, '(A, 6I10)') ' Number of Vehicle processed at simulation time6', ITIME, NVEHLINK
- !  CALL SENDTEXTMSG(M_INFO)      
-        IF (60*((ITIME+1)/60) .EQ. (ITIME+1) .AND. NVEHLINK .GT. 0 ) THEN
-      WRITE(MSGTEXT, '(A, 6I10)') ' Number of Vehicle processed at simulation time', ITIME+1, NVEHLINK
-      CALL SENDTEXTMSG(M_INFO)   
-       NVEHLINK = 0  
+    IF (60*((ITIME+1)/60) .EQ. (ITIME+1) .AND. NVEHLINK .GT. 0 ) THEN
+    WRITE(MSGTEXT, '(A, 6I10)') ' Number of Vehicle processed at simulation time', ITIME+1, NVEHLINK
+    CALL SENDTEXTMSG(M_INFO)   
+    NVEHLINK = 0  
     endif
+
+    
     DO NMETER = 1, NUMBER_OF_RAMPMETERS
     
     READ(4, *, ERR=40, IOMSG=ETEXT, END=26) TIME2, THELINKDATA
